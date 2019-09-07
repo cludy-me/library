@@ -30,7 +30,7 @@ class Port
         $this->setNumber($number);
         $this->setProtocol($protocol);
         $this->setState($state);
-        $this->setSservice($service);
+        $this->setService($service);
     }
 
     /**

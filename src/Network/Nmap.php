@@ -13,9 +13,9 @@ use Symfony\Component\Process\Process;
  *
  * Usage:
  * 
- *   Nmap::scan('http://octobercms.com');
+ *   Nmap::scan('octobercms.com');
  *
- *   Nmap::scan('http://octobercms.com', function($nmap) {
+ *   Nmap::scan('octobercms.com', function($nmap) {
  *
  *       // Enable os detection
  *       $nmap->enableOsDetection();
