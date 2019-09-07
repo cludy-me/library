@@ -19,6 +19,10 @@ class NetworkServiceProvider extends ServiceProvider
         $this->app->singleton('network.http', function($app) {
             return new Http;
         });
+
+        $this->app->singleton('network.nmap', function($app) {
+            return new Nmap;
+        });
     }
 
     /**
@@ -27,6 +31,9 @@ class NetworkServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['network.http'];
+        return [
+            'network.http',
+            'network.nmap'
+        ];
     }
 }
