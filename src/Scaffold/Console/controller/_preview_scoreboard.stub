@@ -1,0 +1,16 @@
+<div class="scoreboard-item title-value">
+    <h4><?= e(trans('{{lower_author}}.{{lower_plugin}}::lang.fields.created_at')) ?></h4>
+    <p class="description"><?= e($formModel->created_at->format("Y-m-d H:i")); ?></p>
+</div>
+
+<div class="scoreboard-item title-value">
+    <h4><?= e(trans('{{lower_author}}.{{lower_plugin}}::lang.fields.updated_at')) ?></h4>
+    <p class="description"><?= e($formModel->updated_at->format("Y-m-d H:i")); ?></p>
+</div>
+
+<?php if ($formModel->trashed()) : ?>
+<div class="scoreboard-item title-value">
+    <h4><?= e(trans('{{lower_author}}.{{lower_plugin}}::lang.fields.deleted_at')) ?></h4>
+    <p class="description"><?= e($formModel->deleted_at->format("Y-m-d H:i")); ?></p>
+</div>
+<?php endif; ?>

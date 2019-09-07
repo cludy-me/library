@@ -43,8 +43,8 @@ class {{studly_name}} extends FormWidgetBase
      */
     public function loadAssets()
     {
-        $this->addCss('css/{{lower_name}}.css', '{{author}}.{{plugin}}');
-        $this->addJs('js/{{lower_name}}.js', '{{author}}.{{plugin}}');
+        $this->addCss('assets/css/{{lower_name}}.css', '{{author}}.{{plugin}}');
+        $this->addJs('assets/js/{{lower_name}}.js', '{{author}}.{{plugin}}');
     }
 
     /**

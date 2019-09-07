@@ -1,25 +1,173 @@
 <?php namespace {{studly_author}}\{{studly_plugin}}\Controllers;
 
+use Flash;
+use Lang;
+use Redirect;
 use BackendMenu;
 use Backend\Classes\Controller;
+use System\Classes\SettingsManager;
 
 /**
  * {{title_name}} Back-end Controller
  */
 class {{studly_name}} extends Controller
 {
+    /**
+     * @var array Extensions implemented by this controller.
+     */
     public $implement = [
         'Backend.Behaviors.FormController',
-        'Backend.Behaviors.ListController'
+        'Backend.Behaviors.ListController',
+        // 'Backend.Behaviors.RelationController'
     ];
 
+    /**
+     * @var array `FormController` configuration.
+     */
     public $formConfig = 'config_form.yaml';
+
+    /**
+     * @var array `ListController` configuration.
+     */
     public $listConfig = 'config_list.yaml';
+
+    /**
+     * @var array `RelationController` configuration, by extension.
+     */
+    // public $relationConfig = 'config_relation.yaml';
+
+    /**
+     * @var array Permissions required to view this page.
+     */
+    public $requiredPermissions = ['{{lower_author}}.{{lower_plugin}}.manage_{{lower_title_name}}'];
+
+    /**
+     * @var string HTML body tag class
+     */
+    public $bodyClass = 'compact-container';
 
     public function __construct()
     {
         parent::__construct();
 
         BackendMenu::setContext('{{studly_author}}.{{studly_plugin}}', '{{lower_plugin}}', '{{lower_name}}');
+        // BackendMenu::setContext('October.System', 'system', 'settings');
+        // SettingsManager::setContext('{{studly_author}}.{{studly_plugin}}', '{{lower_title_name}}');
     }
+
+    public function index()
+    {
+        $this->addJs('/plugins/{{lower_author}}/{{lower_plugin}}/assets/js/bulk-actions.js', '{{studly_author}}.{{studly_plugin}}');
+
+        $this->asExtension('ListController')->index();
+    }
+
+    public function listInjectRowClass($record, $definition = null)
+    {
+        if ($record->trashed() && !$record->is_enabled)
+            return 'strike disabled';
+
+        if ($record->trashed())
+            return 'strike';
+
+        if (!$record->is_enabled)
+            return 'disabled';
+    }
+
+    public function listExtendQuery($query)
+    {
+        $query->withTrashed();
+    }
+
+    public function formExtendQuery($query)
+    {
+        $query->withTrashed();
+    }
+
+    /**
+     * Handle deleting
+     */
+    public function update_onDelete($id)
+    {
+        if (!$model = $this->formFindModelObject($id))
+            return Redirect::refresh();
+
+        $this->formBeforeDelete($model);
+        $model->delete();
+        $this->formAfterDelete($model);
+
+        Flash::success(Lang::get('{{lower_author}}.{{lower_plugin}}::lang.bulk_actions.delete_selected_success'));
+
+        return Redirect::refresh();
+    }
+
+    /**
+     * Handle restoring
+     */
+    public function onRestore($id)
+    {
+        if (!$model = $this->formFindModelObject($id))
+            return Redirect::refresh();
+
+        $this->formBeforeRestore($model);
+        $model->restore();
+        $this->formAfterRestore($model);
+
+        Flash::success(Lang::get('{{lower_author}}.{{lower_plugin}}::lang.bulk_actions.restore_selected_success'));
+
+        return Redirect::refresh();
+    }
+
+    /**
+     * Perform bulk action on selected {{lower_plural_name}}
+     */
+    public function index_onBulkAction()
+    {
+        if (($bulkAction = post('action')) && ($checkedIds = post('checked')) &&
+            is_array($checkedIds) && count($checkedIds)) {
+
+            foreach ($checkedIds as $id) {
+                if (!$model = $this->formFindModelObject($id))
+                    continue;
+
+                switch ($bulkAction) {
+                    case 'delete': {
+                        $this->formBeforeDelete($model);
+                        $model->delete();
+                        $this->formAfterDelete($model);
+                    } break;
+
+                    case 'force_delete': {
+                        $this->formBeforeForceDelete($model);
+                        $model->forceDelete();
+                        $this->formAfterForceDelete($model);
+                    } break;
+
+                    case 'restore': {
+                        $this->formBeforeRestore($model);
+                        $model->restore();
+                        $this->formAfterRestore($model);
+                    } break;
+
+                    case 'disable': {
+                        $this->formBeforeDisable($model);
+                        $model->disable();
+                        $this->formAfterDisable($model);
+                    } break;
+
+                    case 'enable': {
+                        $this->formBeforeEnable($model);
+                        $model->enable();
+                        $this->formAfterEnable($model);
+                    } break;
+                }
+            }
+
+            Flash::success(Lang::get('{{lower_author}}.{{lower_plugin}}::lang.bulk_actions.' . $bulkAction . '_selected_success'));
+        } else 
+            Flash::error(Lang::get('{{lower_author}}.{{lower_plugin}}::lang.bulk_actions.' . $bulkAction . '_selected_empty'));
+
+        return $this->listRefresh();
+    }
+
 }

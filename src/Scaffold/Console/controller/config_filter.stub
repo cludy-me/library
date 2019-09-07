@@ -1,0 +1,39 @@
+scopes:
+    created_at:
+        label: {{lower_author}}.{{lower_plugin}}::lang.fields.created_at
+        type: daterange
+        yearRange: 5
+        conditions: created_at >= ':after' AND created_at <= ':before'
+
+    updated_at:
+        label: {{lower_author}}.{{lower_plugin}}::lang.fields.updated_at
+        type: daterange
+        yearRange: 5
+        conditions: updated_at >= ':after' AND updated_at <= ':before'
+
+    deleted_at:
+        label: {{lower_author}}.{{lower_plugin}}::lang.fields.deleted_at
+        type: daterange
+        yearRange: 5
+        conditions: deleted_at >= ':after' AND deleted_at <= ':before'
+
+    has_comment:
+        label: {{lower_author}}.{{lower_plugin}}::lang.fields.has_comment
+        type: switch
+        conditions:
+            - comment = '' or comment is NULL
+            - comment != ''
+
+    is_enabled:
+        label: {{lower_author}}.{{lower_plugin}}::lang.fields.is_enabled
+        type: switch
+        conditions:
+            - is_enabled <> true
+            - is_enabled = true
+
+    is_deleted:
+        label: {{lower_author}}.{{lower_plugin}}::lang.fields.is_deleted
+        type: switch
+        conditions:
+            - deleted_at = '' or deleted_at is NULL
+            - deleted_at != ''

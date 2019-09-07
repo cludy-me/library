@@ -1,26 +1,82 @@
 <?php namespace {{studly_author}}\{{studly_plugin}}\Models;
 
-use Model;
+use Carbon\Carbon;
+use System\Models\File;
+use October\Rain\Support\Str;
+use October\Rain\Database\Model;
+use October\Rain\Database\Builder;
+use October\Rain\Database\Traits\SoftDelete;
+use October\Rain\Database\Traits\Validation;
 
 /**
  * {{name}} Model
+ *
+ * @property int    $id
+ * @property string $title
+ * @property string $description
+ * @property bool   $is_enabled
+ * @property File   $image
+ * @property string $comment
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property Carbon $deleted_at
  */
 class {{studly_name}} extends Model
 {
+
+    use SoftDelete, Validation;
+
+    public $implement = [
+        'OpenDroplet.Translate.Behaviors.TranslatableModel'
+    ];
+
     /**
      * @var string The database table used by the model.
      */
     public $table = '{{lower_author}}_{{lower_plugin}}_{{snake_plural_name}}';
 
     /**
-     * @var array Guarded fields
+     * @var array Validation rules
+     */
+    public $rules = [
+        'title' => 'required|max:255|unique:{{lower_author}}_{{lower_plugin}}_{{snake_plural_name}}',
+        // 'description' => 'required|min:100',
+    ];
+
+    /**
+     * @var array Translatable attributes
+     */
+    public $translatable = [
+        'title',
+        'description',
+    ];
+
+    /**
+     * @var array The attributes that should be mutated to dates
+     */
+    protected $dates = [
+        'deleted_at'
+    ];
+
+    /**
+     * @var bool Indicates if the model should be timestamped
+     */
+    public $timestamps = true;
+
+    /**
+     * @var array Guarded fields.
      */
     protected $guarded = ['*'];
 
     /**
-     * @var array Fillable fields
+     * @var array Fillable attributes
      */
-    protected $fillable = [];
+    protected $fillable = ['title', 'description', 'is_enabled', 'comment'];
+
+    /**
+     * @var array Hidden attributes
+     */
+    protected $hidden = ['is_enabled', 'comment', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @var array Relations
@@ -32,6 +88,104 @@ class {{studly_name}} extends Model
     public $morphTo = [];
     public $morphOne = [];
     public $morphMany = [];
-    public $attachOne = [];
-    public $attachMany = [];
+    public $attachOne = [
+        'image' => File::class
+    ];
+    public $attachMany = [
+        // 'images' => File::class
+    ];
+
+    /**
+     * Before save event
+     *
+     * @return void
+     */
+    public function beforeSave()
+    {
+        $this->title = Str::ucfirst($this->title);
+    }
+
+    /**
+     * After delete event
+     *
+     * @return void
+     */
+    public function afterDelete()
+    {
+        if ($this->isSoftDelete())
+            return;
+
+        $this->image && $this->image->delete();
+        parent::afterDelete();
+    }
+
+    /**
+     * @param array $attributes
+     *
+     * @return {{studly_name}}
+     */
+    public static function createOrFirst(array $attributes)
+    {
+        return self::firstOrCreate($attributes);
+    }
+
+    /**
+     * Enable {{snake_singular_name}}
+     */
+    public function enable()
+    {
+        if ($model = $this->newQuery()->withTrashed()->find($this->id))
+            $model->update(['is_enabled' => true]);
+    }
+
+    /**
+     * Disable {{snake_singular_name}}
+     */
+    public function disable()
+    {
+        if ($model = $this->newQuery()->withTrashed()->find($this->id))
+            $model->update(['is_enabled' => false]);
+    }
+
+    /**
+     * Check if the {{snake_singular_name}} is enabled.
+     *
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->is_enabled;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHasCommentAttribute()
+    {
+        return (bool)$this->comment;
+    }
+
+    /**
+     * @param Builder $query
+     *
+     * @return Builder
+     */
+    public function scopeEnabled($query)
+    {
+        return $query->whereNotNull('is_enabled')->where('is_enabled', true);
+    }
+
+    /**
+     * @param Builder $query
+     * @param string  $title
+     *
+     * @return Builder
+     */
+    public function scopeTitle(Builder $query, string $title)
+    {
+        $method = (is_array($title) ? 'whereIn' : 'where');
+
+        return $query->$method('title', $title);
+    }
+    
 }

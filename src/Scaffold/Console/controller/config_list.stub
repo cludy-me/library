@@ -3,22 +3,22 @@
 # ===================================
 
 # Model List Column configuration
-list: $/{{lower_author}}/{{lower_plugin}}/models/{{lower_model}}/columns.yaml
+list: $/{{lower_author}}/{{lower_plugin}}/models/{{lower_model}}/fields.yaml
 
 # Model Class name
 modelClass: {{studly_author}}\{{studly_plugin}}\Models\{{studly_model}}
 
 # List Title
-title: Manage {{title_plural_name}}
+title: {{lower_author}}.{{lower_plugin}}::lang.{{lower_plural_name}}.list_title
 
 # Link URL for each record
-recordUrl: {{lower_author}}/{{lower_plugin}}/{{lower_name}}/update/:id
+recordUrl: {{lower_author}}/{{lower_plugin}}/{{lower_name}}/preview/:id
 
 # Message to display if the list is empty
 noRecordsMessage: backend::lang.list.no_records
 
 # Records to display per page
-recordsPerPage: 20
+recordsPerPage: 200
 
 # Display page numbers with pagination, disable to improve performance
 showPageNumbers: true
@@ -45,3 +45,6 @@ toolbar:
     # Search widget configuration
     search:
         prompt: backend::lang.list.search_prompt
+
+# Filter widget configuration
+filter: config_filter.yaml

@@ -244,7 +244,7 @@ abstract class GeneratorCommand extends Command
     protected function getArguments()
     {
         return [
-            ['plugin', InputArgument::REQUIRED, 'The name of the plugin to create. Eg: RainLab.Blog'],
+            ['plugin', InputArgument::REQUIRED, 'The name of the plugin to create. Eg: OpenDroplet.Blog'],
         ];
     }
 

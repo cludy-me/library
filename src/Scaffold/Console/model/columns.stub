@@ -3,6 +3,41 @@
 # ===================================
 
 columns:
-    id:
-        label: ID
+    image:
+        label: {{lower_author}}.{{lower_plugin}}::lang.fields.image
+        type: partial
+        path: imagethumb
+        width: 40px
+        sortable: false
+
+    title:
+        label: {{lower_author}}.{{lower_plugin}}::lang.fields.title
         searchable: true
+
+    has_comment:
+        label: {{lower_author}}.{{lower_plugin}}::lang.fields.has_comment
+        type: switch
+        searchable: false
+        sortable: false
+        
+    is_enabled:
+        label: {{lower_author}}.{{lower_plugin}}::lang.fields.is_enabled
+        type: switch
+
+    created_at:
+        label: {{lower_author}}.{{lower_plugin}}::lang.fields.created_at
+        type: datetime
+        format: Y-m-d H:i
+        invisible: true
+
+    updated_at:
+        label: {{lower_author}}.{{lower_plugin}}::lang.fields.updated_at
+        type: datetime
+        format: Y-m-d H:i
+        invisible: true
+
+    deleted_at:
+        label: {{lower_author}}.{{lower_plugin}}::lang.fields.deleted_at
+        type: datetime
+        format: Y-m-d H:i
+        invisible: true

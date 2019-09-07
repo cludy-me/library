@@ -3,6 +3,35 @@
 # ===================================
 
 fields:
-    id:
-        label: ID
-        disabled: true
+    title:
+        label: {{lower_author}}.{{lower_plugin}}::lang.fields.title
+        span: full
+
+    description:
+        label: {{lower_author}}.{{lower_plugin}}::lang.fields.description
+        type: richeditor
+        toolbarButtons: undo|redo||bold|italic|underline|strikeThrough||quote|insertHR|insertLink||formatOL|formatUL||indent|outdent||emoticons||clearFormatting|html||fullscreen
+        size: huge
+        span: full
+
+tabs:
+    fields:
+
+secondaryTabs:
+    fields:
+        is_enabled:
+            span: full
+            type: switch
+            default: true
+                
+        image:
+            label: {{lower_author}}.{{lower_plugin}}::lang.fields.image
+            type: fileupload
+            mode: image
+            imageHeight: 260
+            imageWidth: 260
+
+        comment:
+            label: {{lower_author}}.{{lower_plugin}}::lang.fields.comment
+            type: textarea
+            span: full

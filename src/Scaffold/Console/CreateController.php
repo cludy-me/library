@@ -34,14 +34,20 @@ class CreateController extends GeneratorCommand
      * @var array
      */
     protected $stubs = [
-        'controller/_list_toolbar.stub' => 'controllers/{{lower_name}}/_list_toolbar.htm',
-        'controller/config_form.stub'   => 'controllers/{{lower_name}}/config_form.yaml',
-        'controller/config_list.stub'   => 'controllers/{{lower_name}}/config_list.yaml',
-        'controller/create.stub'        => 'controllers/{{lower_name}}/create.htm',
-        'controller/index.stub'         => 'controllers/{{lower_name}}/index.htm',
-        'controller/preview.stub'       => 'controllers/{{lower_name}}/preview.htm',
-        'controller/update.stub'        => 'controllers/{{lower_name}}/update.htm',
-        'controller/controller.stub'    => 'controllers/{{studly_name}}.php',
+        'controller/_hint_trashed.stub'       => 'controllers/{{lower_name}}/_hint_trashed.htm',
+        'controller/_imagethumb.stub'         => 'controllers/{{lower_name}}/_imagethumb.htm',
+        'controller/_list_toolbar.stub'       => 'controllers/{{lower_name}}/_list_toolbar.htm',
+        'controller/_preview_scoreboard.stub' => 'controllers/{{lower_name}}/_preview_scoreboard.htm',
+        'controller/_preview_toolbar.stub'    => 'controllers/{{lower_name}}/_preview_toolbar.htm',
+        'controller/config_filter.stub'       => 'controllers/{{lower_name}}/config_filter.yaml',
+        'controller/config_form.stub'         => 'controllers/{{lower_name}}/config_form.yaml',
+        'controller/config_list.stub'         => 'controllers/{{lower_name}}/config_list.yaml',
+        'controller/config_relation.stub'     => 'controllers/{{lower_name}}/config_relation.yaml',
+        'controller/create.stub'              => 'controllers/{{lower_name}}/create.htm',
+        'controller/index.stub'               => 'controllers/{{lower_name}}/index.htm',
+        'controller/preview.stub'             => 'controllers/{{lower_name}}/preview.htm',
+        'controller/update.stub'              => 'controllers/{{lower_name}}/update.htm',
+        'controller/controller.stub'          => 'controllers/{{studly_name}}.php',
     ];
 
     /**
@@ -84,7 +90,7 @@ class CreateController extends GeneratorCommand
     protected function getArguments()
     {
         return [
-            ['plugin', InputArgument::REQUIRED, 'The name of the plugin to create. Eg: RainLab.Blog'],
+            ['plugin', InputArgument::REQUIRED, 'The name of the plugin to create. Eg: OpenDroplet.Blog'],
             ['controller', InputArgument::REQUIRED, 'The name of the controller. Eg: Posts'],
         ];
     }

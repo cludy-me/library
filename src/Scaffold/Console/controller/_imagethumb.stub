@@ -1,0 +1,5 @@
+<?php if($value): ?>
+<div style="margin: -10px auto">
+    <img src="<?= $value->getThumb(40, 40, ['mode' => 'crop']) ?>" alt="<?= $value->title ?>">
+</div>
+<?php endif; ?>

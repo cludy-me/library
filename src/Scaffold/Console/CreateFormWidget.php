@@ -69,7 +69,7 @@ class CreateFormWidget extends GeneratorCommand
     protected function getArguments()
     {
         return [
-            ['plugin', InputArgument::REQUIRED, 'The name of the plugin. Eg: RainLab.Blog'],
+            ['plugin', InputArgument::REQUIRED, 'The name of the plugin. Eg: OpenDroplet.Blog'],
             ['widget', InputArgument::REQUIRED, 'The name of the form widget. Eg: PostList'],
         ];
     }

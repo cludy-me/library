@@ -35,7 +35,7 @@ class CreateModel extends GeneratorCommand
     protected $stubs = [
         'model/model.stub'        => 'models/{{studly_name}}.php',
         'model/fields.stub'       => 'models/{{lower_name}}/fields.yaml',
-        'model/columns.stub'      => 'models/{{lower_name}}/columns.yaml',
+        'model/fields.stub'      => 'models/{{lower_name}}/fields.yaml',
         'model/create_table.stub' => 'updates/create_{{snake_plural_name}}_table.php',
     ];
 
@@ -69,7 +69,7 @@ class CreateModel extends GeneratorCommand
     protected function getArguments()
     {
         return [
-            ['plugin', InputArgument::REQUIRED, 'The name of the plugin. Eg: RainLab.Blog'],
+            ['plugin', InputArgument::REQUIRED, 'The name of the plugin. Eg: OpenDroplet.Blog'],
             ['model', InputArgument::REQUIRED, 'The name of the model. Eg: Post'],
         ];
     }

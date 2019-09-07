@@ -33,7 +33,13 @@ class CreatePlugin extends GeneratorCommand
      * @var array
      */
     protected $stubs = [
+        'plugin/assets/js/bulk-actions.stub'  => 'assets/js/bulk-actions.js',
+        'plugin/lang/en.stub' => 'lang/en/lang.php',
+        'plugin/lang/lt.stub' => 'lang/lt/lang.php',
+        'plugin/models/settings/fields.stub' => 'models/settings/fields.yaml',
+        'plugin/models/settings.stub' => 'models/Settings.php',
         'plugin/plugin.stub'  => 'Plugin.php',
+        'plugin/readme.stub'  => 'README.md',
         'plugin/version.stub' => 'updates/version.yaml',
     ];
 
@@ -74,7 +80,7 @@ class CreatePlugin extends GeneratorCommand
     protected function getArguments()
     {
         return [
-            ['plugin', InputArgument::REQUIRED, 'The name of the plugin to create. Eg: RainLab.Blog'],
+            ['plugin', InputArgument::REQUIRED, 'The name of the plugin to create. Eg: OpenDroplet.Blog'],
         ];
     }
 

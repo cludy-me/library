@@ -65,7 +65,7 @@ class CreateCommand extends GeneratorCommand
     protected function getArguments()
     {
         return [
-            ['plugin', InputArgument::REQUIRED, 'The name of the plugin. Eg: RainLab.Blog'],
+            ['plugin', InputArgument::REQUIRED, 'The name of the plugin. Eg: OpenDroplet.Blog'],
             ['command-name', InputArgument::REQUIRED, 'The name of the command. Eg: MyCommand'],
         ];
     }

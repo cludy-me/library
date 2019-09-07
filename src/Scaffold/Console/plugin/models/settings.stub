@@ -1,0 +1,34 @@
+<?php namespace {{studly_author}}\{{studly_name}}\Models;
+
+use October\Rain\Database\Model;
+
+/**
+ * Settings Model
+ */
+class Settings extends Model
+{
+
+    /**
+     * @var array
+     */
+    public $implement = ['System.Behaviors.SettingsModel'];
+
+    /**
+     * @var string
+     */
+    public $settingsCode = '{{lower_author}}_{{lower_name}}_settings';
+
+    /**
+     * @var string
+     */
+    public $settingsFields = 'fields.yaml';
+
+    /**
+     * @return void
+     */
+    public function initSettingsData()
+    {
+
+    }
+
+}
