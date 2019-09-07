@@ -154,17 +154,17 @@ class File extends Model
      */
     public function fromUrl($url, $filename = null)
     {
-        $data = Http::get($url);
+        $response = Http::get($url);
 
-        if ($data->code != 200) {
-            throw new Exception(sprintf('Error getting file "%s", error code: %d', $data->url, $data->code));
+        if ($response->status() != 200) {
+            throw new Exception(sprintf('Error getting file "%s", error code: %d', $url, $response->status()));
         }
 
         if (empty($filename)) {
             $filename = FileHelper::basename($url);
         }
 
-        return $this->fromData($data, $filename);
+        return $this->fromData($response->content(), $filename);
     }
 
     //

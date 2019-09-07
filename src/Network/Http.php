@@ -18,8 +18,8 @@
  *   Http::options('...');
  *
  *   $result = Http::post('http://octobercms.com');
- *   echo $result;                          // Outputs: <html><head><title>...
- *   echo $result->code;                    // Outputs: 200
+ *   echo $result->content();               // Outputs: <html><head><title>...
+ *   echo $result->status();                // Outputs: 200
  *   echo $result->headers['Content-Type']; // Outputs: text/html; charset=UTF-8
  *
  *   Http::post('http://octobercms.com', function($http){
@@ -39,7 +39,10 @@
  *
  *       // Disable redirects
  *       $http->noRedirect();
- *
+ * 
+ *       // Set a user agent
+ *       $http->userAgent(Http::makeUserAgent());
+ * 
  *       // Check host SSL certificate
  *       $http->verifySSL();
  *
@@ -68,72 +71,72 @@ class Http
     /**
      * @var string The HTTP address to use.
      */
-    public $url;
+    protected $url;
 
     /**
      * @var string The method the request should use.
      */
-    public $method;
+    protected $method;
 
     /**
      * @var array The headers to be sent with the request.
      */
-    public $headers = [];
+    protected $headers = [];
 
     /**
      * @var string The last response body.
      */
-    public $body = '';
+    protected $body = '';
 
     /**
      * @var string The last response body (without headers extracted).
      */
-    public $rawBody = '';
+    protected $rawBody = '';
 
     /**
      * @var array The last returned HTTP code.
      */
-    public $code;
+    protected $code;
 
     /**
      * @var array The cURL response information.
      */
-    public $info;
+    protected $info;
 
     /**
      * @var array cURL Options.
      */
-    public $requestOptions;
+    protected $requestOptions;
 
     /**
      * @var array Request data.
      */
-    public $requestData;
+    protected $requestData;
 
     /**
      * @var array Request headers.
      */
-    public $requestHeaders;
+    protected $requestHeaders;
 
     /**
      * @var string Argument separator.
      */
-    public $argumentSeparator = '&';
+    protected $argumentSeparator = '&';
 
     /**
      * @var string If writing response to a file, which file to use.
      */
-    public $streamFile;
+    protected $streamFile;
 
     /**
      * @var string If writing response to a file, which write filter to apply.
      */
-    public $streamFilter;
+    protected $streamFilter;
 
     /**
      * @var int The maximum redirects allowed.
      */
-    public $maxRedirects = 10;
+    protected $maxRedirects = 10;
 
     /**
      * @var int Internal counter
@@ -144,16 +147,17 @@ class Http
      * Make the object with common properties
      * @param string   $url     HTTP request address
      * @param string   $method  Request method (GET, POST, PUT, DELETE, etc)
-     * @param callable $options Callable helper function to modify the object
+     * @param callable $callback Callable helper function to modify the object
+     * @return self
      */
-    public static function make($url, $method, $options = null)
+    public static function make($url, $method, $callback = null)
     {
         $http = new self;
         $http->url = $url;
         $http->method = $method;
 
-        if ($options && is_callable($options)) {
-            $options($http);
+        if ($callback && is_callable($callback)) {
+            $callback($http);
         }
 
         return $http;
@@ -162,78 +166,72 @@ class Http
     /**
      * Make a HTTP GET call.
      * @param string $url
-     * @param array  $options
-     * @return self
+     * @param callable $callback Callable helper function to modify the object
+     * @return Response
      */
-    public static function get($url, $options = null)
+    public static function get($url, $callback = null)
     {
-        $http = self::make($url, self::METHOD_GET, $options);
-        return $http->send();
+        return self::make($url, self::METHOD_GET, $callback)->send();
     }
 
     /**
      * Make a HTTP POST call.
      * @param string $url
-     * @param array  $options
-     * @return self
+     * @param callable $callback Callable helper function to modify the object
+     * @return Response
      */
-    public static function post($url, $options = null)
+    public static function post($url, $callback = null)
     {
-        $http = self::make($url, self::METHOD_POST, $options);
-        return $http->send();
+        return self::make($url, self::METHOD_POST, $callback)->send();
     }
 
     /**
      * Make a HTTP DELETE call.
      * @param string $url
-     * @param array  $options
-     * @return self
+     * @param callable $callback Callable helper function to modify the object
+     * @return Response
      */
-    public static function delete($url, $options = null)
+    public static function delete($url, $callback = null)
     {
-        $http = self::make($url, self::METHOD_DELETE, $options);
-        return $http->send();
+        return self::make($url, self::METHOD_DELETE, $callback)->send();
     }
 
     /**
      * Make a HTTP PATCH call.
      * @param string $url
-     * @param array  $options
-     * @return self
+     * @param callable $callback Callable helper function to modify the object
+     * @return Response
      */
-    public static function patch($url, $options = null)
+    public static function patch($url, $callback = null)
     {
-        $http = self::make($url, self::METHOD_PATCH, $options);
-        return $http->send();
+        return self::make($url, self::METHOD_PATCH, $callback)->send();
     }
 
     /**
      * Make a HTTP PUT call.
      * @param string $url
-     * @param array  $options
-     * @return self
+     * @param callable $callback Callable helper function to modify the object
+     * @return Response
      */
-    public static function put($url, $options = null)
+    public static function put($url, $callback = null)
     {
-        $http = self::make($url, self::METHOD_PUT, $options);
-        return $http->send();
+        return self::make($url, self::METHOD_PUT, $callback)->send();
     }
 
     /**
      * Make a HTTP OPTIONS call.
      * @param string $url
-     * @param array  $options
-     * @return self
+     * @param callable $callback Callable helper function to modify the object
+     * @return Response
      */
-    public static function options($url, $options = null)
+    public static function options($url, $callback = null)
     {
-        $http = self::make($url, self::METHOD_OPTIONS, $options);
-        return $http->send();
+        return self::make($url, self::METHOD_OPTIONS, $callback)->send();
     }
 
     /**
      * Execute the HTTP request.
-     * @return string response body
+     * @return Response response
      */
     public function send()
     {
@@ -348,7 +346,7 @@ class Http
             }
         }
 
-        return $this;
+        return Response::create($this->body, $this->code, $this->headers);
     }
 
     /**
@@ -376,11 +374,13 @@ class Http
                 }
             }
         }
+
         return $headers;
     }
 
     /**
      * Add a data to the request.
+     * @param array|string $key
      * @param string $value
      * @return self
      */
@@ -394,11 +394,13 @@ class Http
         }
 
         $this->requestData[$key] = $value;
+
         return $this;
     }
 
     /**
      * Add a header to the request.
+     * @param array|string $key
      * @param string $value
      * @return self
      */
@@ -412,29 +414,44 @@ class Http
         }
 
         $this->requestHeaders[$key] = $value;
+
         return $this;
     }
 
     /**
      * Sets a proxy to use with this request
+     * @param string $type
+     * @param string $host
+     * @param string $port
+     * @param string $username
+     * @param string $password
+     * @return self
      */
     public function proxy($type, $host, $port, $username = null, $password = null)
     {
-        if ($type === 'http') {
+        if ($type === 'http')
             $this->setOption(CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
-        }
-        elseif ($type === 'socks4') {
+        elseif ($type === 'socks4')
             $this->setOption(CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
-        }
-        elseif ($type === 'socks5') {
+        elseif ($type === 'socks5')
             $this->setOption(CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
-        }
 
         $this->setOption(CURLOPT_PROXY, $host . ':' . $port);
 
-        if ($username && $password) {
+        if ($username && $password)
             $this->setOption(CURLOPT_PROXYUSERPWD, $username . ':' . $password);
-        }
+
+        return $this;
+    }
+
+    /**
+     * Sets a user agent
+     * @param string $userAgent
+     * @return self
+     */
+    public function userAgent($userAgent)
+    {
+        $this->setOption(CURLOPT_USERAGENT, $userAgent);
 
         return $this;
     }
@@ -447,9 +464,8 @@ class Http
      */
     public function auth($user, $pass = null)
     {
-        if (strpos($user, ':') !== false && !$pass) {
+        if (strpos($user, ':') !== false && !$pass)
             list($user, $pass) = explode(':', $user);
-        }
 
         $this->setOption(CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         $this->setOption(CURLOPT_USERPWD, $user . ':' . $pass);
@@ -459,20 +475,24 @@ class Http
 
     /**
      * Disable follow location (redirects)
+     * @return self
      */
     public function noRedirect()
     {
         $this->setOption(CURLOPT_FOLLOWLOCATION, false);
+
         return $this;
     }
 
     /**
      * Enable SSL verification
+     * @return self
      */
     public function verifySSL()
     {
         $this->setOption(CURLOPT_SSL_VERIFYPEER, true);
         $this->setOption(CURLOPT_SSL_VERIFYHOST, true);
+
         return $this;
     }
 
@@ -485,6 +505,7 @@ class Http
     {
         $this->setOption(CURLOPT_CONNECTTIMEOUT, $timeout);
         $this->setOption(CURLOPT_TIMEOUT, $timeout);
+
         return $this;
     }
 
@@ -521,6 +542,7 @@ class Http
         }
 
         $this->requestOptions[$option] = $value;
+
         return $this;
     }
 
@@ -531,5 +553,49 @@ class Http
     public function __toString()
     {
         return (string) $this->body;
+    }
+
+    /**
+     * Make a user agent
+     *
+     * @param bool $random
+     * @return string
+     */
+    public static function makeUserAgent($random = false)
+    {
+        if ($random === false) {
+            return 'Mozilla/5.0 (Windows NT 6.1; rv:31.0) Gecko/20100101 Firefox/31.0';
+        }
+
+        //list of browsers
+        $agentBrowser = [
+            'Firefox',
+            'Safari',
+            'Opera',
+            'Flock',
+            'Internet Explorer',
+            'Seamonkey',
+            'Konqueror',
+            'GoogleBot'
+        ];
+
+        //list of operating systems
+        $agentOS = [
+            'Windows 3.1',
+            'Windows 95',
+            'Windows 98',
+            'Windows 2000',
+            'Windows NT',
+            'Windows XP',
+            'Windows Vista',
+            'Redhat Linux',
+            'Ubuntu',
+            'Fedora',
+            'AmigaOS',
+            'OS 10.5'
+        ];
+
+        //randomly generate UserAgent
+        return $agentBrowser[rand(0, 7)] . '/' . rand(1, 8) . '.' . rand(0, 9) . ' (' . $agentOS[rand(0, 11)] . ' ' . rand(1, 7) . '.' . rand(0, 9) . '; en-US;)';
     }
 }
