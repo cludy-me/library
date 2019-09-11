@@ -17,7 +17,7 @@
         'title' => 'Pavadinimas',
         'description' => 'Aprašymas',
         'image' => 'Paveiksliukas',
-        'comment' => 'Komentaras'
+        'comment' => 'Komentaras',
         'has_comment' => 'Turi komentarą',
         'is_enabled' => 'Įjungtas',
         'is_deleted' => 'Ištrintas',
