@@ -55,6 +55,7 @@
     '{{lower_plural_name}}' => [
         'name' => '{{studly_singular_name}}',
         'menu_label' => '{{studly_plural_name}}',
+        'menu_description' => 'Tvarkyti {{studly_plural_name}}',
         'all' => 'Visi {{lower_plural_name}}',
         'create_title' => 'Sukurti {{lower_singular_name}}',
         'update_title' => 'Atnaujinti {{lower_singular_name}}',

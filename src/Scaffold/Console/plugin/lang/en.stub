@@ -55,6 +55,7 @@
     '{{lower_plural_name}}' => [
         'name' => '{{studly_singular_name}}',
         'menu_label' => '{{studly_plural_name}}',
+        'menu_description' => 'Manage {{studly_plural_name}}',
         'all' => 'All {{lower_plural_name}}',
         'create_title' => 'Create {{lower_singular_name}}',
         'update_title' => 'Update {{lower_singular_name}}',

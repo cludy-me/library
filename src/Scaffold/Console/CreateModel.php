@@ -34,8 +34,8 @@ class CreateModel extends GeneratorCommand
      */
     protected $stubs = [
         'model/model.stub'        => 'models/{{studly_name}}.php',
+        'model/columns.stub'      => 'models/{{lower_name}}/columns.yaml',
         'model/fields.stub'       => 'models/{{lower_name}}/fields.yaml',
-        'model/fields.stub'      => 'models/{{lower_name}}/fields.yaml',
         'model/create_table.stub' => 'updates/create_{{snake_plural_name}}_table.php',
     ];
 
