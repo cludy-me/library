@@ -39,7 +39,7 @@ class {{studly_name}} extends Controller
     /**
      * @var array Permissions required to view this page.
      */
-    public $requiredPermissions = ['{{lower_author}}.{{lower_plugin}}.manage_{{lower_title_name}}'];
+    public $requiredPermissions = ['{{lower_author}}.{{lower_plugin}}.manage_{{lower_name}}'];
 
     /**
      * @var string HTML body tag class
@@ -52,7 +52,7 @@ class {{studly_name}} extends Controller
 
         BackendMenu::setContext('{{studly_author}}.{{studly_plugin}}', '{{lower_plugin}}', '{{lower_name}}');
         // BackendMenu::setContext('October.System', 'system', 'settings');
-        // SettingsManager::setContext('{{studly_author}}.{{studly_plugin}}', '{{lower_title_name}}');
+        // SettingsManager::setContext('{{studly_author}}.{{studly_plugin}}', '{{lower_name}}');
     }
 
     public function index()

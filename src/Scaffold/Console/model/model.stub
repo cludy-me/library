@@ -96,6 +96,11 @@ class {{studly_name}} extends Model
     ];
 
     /**
+     * @var array Cache for getTitleList() method
+     */
+    protected static $titleList = null;
+
+    /**
      * Before save event
      *
      * @return void
@@ -117,6 +122,15 @@ class {{studly_name}} extends Model
 
         $this->image && $this->image->delete();
         parent::afterDelete();
+    }
+
+    public static function getTitleList()
+    {
+        if (self::$titleList) {
+            return self::$titleList;
+        }
+
+        return self::$titleList = self::enabled()->distinct()->orderBy('title')->lists('title', 'id');
     }
 
     /**
@@ -177,11 +191,11 @@ class {{studly_name}} extends Model
 
     /**
      * @param Builder $query
-     * @param string  $title
+     * @param array|string $title
      *
      * @return Builder
      */
-    public function scopeTitle(Builder $query, string $title)
+    public function scopeTitle(Builder $query, $title)
     {
         $method = (is_array($title) ? 'whereIn' : 'where');
 
