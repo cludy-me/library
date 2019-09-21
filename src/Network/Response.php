@@ -5,8 +5,54 @@ use Illuminate\Http\Response as ResponseBase;
 class Response extends ResponseBase
 {
 
+    /** @var array */
+    private $info;
+
     /** @var string */
     private $exitIP;
+
+
+    /**
+     * Factory method for chainability.
+     *
+     * Example:
+     *
+     *     return Response::create($body, 200)
+     *         ->setSharedMaxAge(300);
+     *
+     * @param mixed $content The response content, see setContent()
+     * @param int   $status  The response status code
+     * @param array $headers An array of response headers
+     * @param array $info    An array of response info
+     *
+     * @return self
+     */
+    public static function create($content = '', $status = 200, $headers = array(), $info = array())
+    {
+        $response = parent::create($content, $status, $headers);
+        $response->setInfo($info);
+
+        return $response;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInfo()
+    {
+        return $this->info;
+    }
+
+    /**
+     * @param array $info
+     * @return self
+     */
+    public function setInfo($info)
+    {
+        $this->info = $info;
+
+        return $this;
+    }
 
     /**
      * @return string

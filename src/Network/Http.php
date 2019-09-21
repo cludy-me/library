@@ -346,7 +346,7 @@ class Http
             }
         }
 
-        return Response::create($this->body, $this->code, $this->headers);
+        return Response::create($this->body, $this->code, $this->headers, $this->info);
     }
 
     /**
@@ -491,7 +491,7 @@ class Http
     public function verifySSL()
     {
         $this->setOption(CURLOPT_SSL_VERIFYPEER, true);
-        $this->setOption(CURLOPT_SSL_VERIFYHOST, true);
+        $this->setOption(CURLOPT_SSL_VERIFYHOST, 2);
 
         return $this;
     }
