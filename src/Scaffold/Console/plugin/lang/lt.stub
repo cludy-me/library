@@ -21,7 +21,7 @@
         'comment' => 'Komentaras',
         'has_comment' => 'Turi komentarą',
         'is_enabled' => 'Įjungtas',
-        'is_default' => 'Pagrindinis',
+        'is_primary' => 'Pagrindinis',
         'is_deleted' => 'Ištrintas',
         'created_at' => 'Sukurta',
         'updated_at' => 'Atnaujinta',

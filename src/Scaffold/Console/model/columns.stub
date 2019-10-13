@@ -29,7 +29,7 @@ columns:
         type: switch
 
     is_primary:
-        label: {{lower_author}}.{{lower_plugin}}::lang.fields.is_default
+        label: {{lower_author}}.{{lower_plugin}}::lang.fields.is_primary
         type: switch
 
     created_at:
