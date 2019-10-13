@@ -45,7 +45,7 @@ class {{studly_name}}Model extends ModelBehavior
      */
     public function set{{studly_name}}CodeAttribute($code)
     {
-        if (!${{snake_singular_name}} = {{studly_name}}::core($code)->first()) {
+        if (!${{snake_singular_name}} = {{studly_name}}::code($code)->first()) {
             return;
         }
 
