@@ -12,8 +12,10 @@ class Create{{studly_plural_name}}Table extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->string('title');
+            $table->string('code', 50)->index()->nullable();
             $table->text('description')->nullable();
             $table->boolean('is_enabled')->default(true);
+            $table->boolean('is_primary')->nullable();
             $table->text('comment')->nullable();
             $table->timestamps();
             $table->softDeletes();

@@ -15,11 +15,13 @@
     ],
     'fields' => [
         'title' => 'Title',
+        'code' => 'Code',
         'description' => 'Description',
         'image' => 'Image',
         'comment' => 'Comment',
         'has_comment' => 'Has comment',
         'is_enabled' => 'Enabled',
+        'is_default' => 'Default',
         'is_deleted' => 'Deleted',
         'created_at' => 'Created At',
         'updated_at' => 'Updated At',

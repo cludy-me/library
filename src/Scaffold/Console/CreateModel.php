@@ -33,10 +33,11 @@ class CreateModel extends GeneratorCommand
      * @var array
      */
     protected $stubs = [
-        'model/model.stub'        => 'models/{{studly_name}}.php',
-        'model/columns.stub'      => 'models/{{lower_name}}/columns.yaml',
-        'model/fields.stub'       => 'models/{{lower_name}}/fields.yaml',
-        'model/create_table.stub' => 'updates/create_{{snake_plural_name}}_table.php',
+        'model/modelbehavior.stub' => 'behaviors/{{studly_name}}Model.php',
+        'model/model.stub'         => 'models/{{studly_name}}.php',
+        'model/columns.stub'       => 'models/{{lower_name}}/columns.yaml',
+        'model/fields.stub'        => 'models/{{lower_name}}/fields.yaml',
+        'model/create_table.stub'  => 'updates/create_{{snake_plural_name}}_table.php',
     ];
 
     /**

@@ -2,19 +2,25 @@
 
 use Carbon\Carbon;
 use System\Models\File;
-use October\Rain\Support\Str;
 use October\Rain\Database\Model;
 use October\Rain\Database\Builder;
 use October\Rain\Database\Traits\SoftDelete;
 use October\Rain\Database\Traits\Validation;
+use OpenDroplet\Registry\Traits\Title;
+use OpenDroplet\Registry\Traits\Code;
+use OpenDroplet\Registry\Traits\Enable;
+use OpenDroplet\Registry\Traits\Primary;
+use OpenDroplet\Registry\Traits\Comment;
 
 /**
- * {{name}} Model
+ * {{studly_name}} Model
  *
  * @property int    $id
  * @property string $title
+ * @property string $code
  * @property string $description
  * @property bool   $is_enabled
+ * @property bool   $is_primary
  * @property File   $image
  * @property string $comment
  * @property Carbon $created_at
@@ -24,6 +30,7 @@ use October\Rain\Database\Traits\Validation;
 class {{studly_name}} extends Model
 {
 
+    use Title, Code, Enable, Primary, Comment; // extend model fields
     use SoftDelete, Validation;
 
     public $implement = [
@@ -39,7 +46,8 @@ class {{studly_name}} extends Model
      * @var array Validation rules
      */
     public $rules = [
-        'title' => 'required|max:255|unique:{{lower_author}}_{{lower_plugin}}_{{snake_plural_name}}',
+        'title'  => 'required|max:255',
+        'code' => 'required|max:50|unique:{{lower_author}}_{{lower_plugin}}_{{snake_plural_name}}',
         // 'description' => 'required|min:100',
     ];
 
@@ -71,12 +79,12 @@ class {{studly_name}} extends Model
     /**
      * @var array Fillable attributes
      */
-    protected $fillable = ['title', 'description', 'is_enabled', 'comment'];
+    protected $fillable = ['title', 'code', 'description', 'is_enabled', 'is_primary', 'comment'];
 
     /**
      * @var array Hidden attributes
      */
-    protected $hidden = ['is_enabled', 'comment', 'created_at', 'updated_at', 'deleted_at'];
+    protected $hidden = ['is_enabled', 'is_primary', 'comment', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @var array Relations
@@ -96,21 +104,6 @@ class {{studly_name}} extends Model
     ];
 
     /**
-     * @var array Cache for getTitleList() method
-     */
-    protected static $titleList = null;
-
-    /**
-     * Before save event
-     *
-     * @return void
-     */
-    public function beforeSave()
-    {
-        $this->title = Str::ucfirst($this->title);
-    }
-
-    /**
      * After delete event
      *
      * @return void
@@ -124,15 +117,6 @@ class {{studly_name}} extends Model
         parent::afterDelete();
     }
 
-    public static function getTitleList()
-    {
-        if (self::$titleList) {
-            return self::$titleList;
-        }
-
-        return self::$titleList = self::enabled()->distinct()->orderBy('title')->lists('title', 'id');
-    }
-
     /**
      * @param array $attributes
      *
@@ -142,64 +126,4 @@ class {{studly_name}} extends Model
     {
         return self::firstOrCreate($attributes);
     }
-
-    /**
-     * Enable {{snake_singular_name}}
-     */
-    public function enable()
-    {
-        if ($model = $this->newQuery()->withTrashed()->find($this->id))
-            $model->update(['is_enabled' => true]);
-    }
-
-    /**
-     * Disable {{snake_singular_name}}
-     */
-    public function disable()
-    {
-        if ($model = $this->newQuery()->withTrashed()->find($this->id))
-            $model->update(['is_enabled' => false]);
-    }
-
-    /**
-     * Check if the {{snake_singular_name}} is enabled.
-     *
-     * @return bool
-     */
-    public function isEnabled()
-    {
-        return $this->is_enabled;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getHasCommentAttribute()
-    {
-        return (bool)$this->comment;
-    }
-
-    /**
-     * @param Builder $query
-     *
-     * @return Builder
-     */
-    public function scopeEnabled($query)
-    {
-        return $query->whereNotNull('is_enabled')->where('is_enabled', true);
-    }
-
-    /**
-     * @param Builder $query
-     * @param array|string $title
-     *
-     * @return Builder
-     */
-    public function scopeTitle(Builder $query, $title)
-    {
-        $method = (is_array($title) ? 'whereIn' : 'where');
-
-        return $query->$method('title', $title);
-    }
-    
 }

@@ -1,0 +1,72 @@
+<?php namespace {{studly_author}}\{{studly_plugin}}\Behaviors;
+
+use System\Classes\ModelBehavior;
+use {{studly_author}}\{{studly_plugin}}\Models\{{studly_name}};
+
+/**
+ * {{studly_name}} model extension
+ *
+ * Adds {{studly_name}} relation to a model
+ *
+ * Usage:
+ *
+ * In the model class definition:
+ *
+ *   public $implement = ['{{studly_author}}.{{studly_plugin}}.Behaviors.{{studly_name}}Model'];
+ *
+ */
+class {{studly_name}}Model extends ModelBehavior
+{
+    /**
+     * Constructor
+     */
+    public function __construct($model)
+    {
+        parent::__construct($model);
+
+        $model->addFillable([
+            '{{snake_singular_name}}',
+            '{{snake_singular_name}}_id',
+            '{{snake_singular_name}}_code',
+        ]);
+
+        $model->belongsTo['{{snake_singular_name}}'] = [{{studly_name}}::class];
+    }
+
+    public function get{{studly_name}}Options()
+    {
+        return {{studly_name}}::listEnabled();
+    }
+
+    /**
+     * Sets the "{{snake_singular_name}}" relation with the code specified, model lookup used.
+     *
+     * @param string $code
+     */
+    public function set{{studly_name}}CodeAttribute($code)
+    {
+        if (!${{snake_singular_name}} = {{studly_name}}::core($code)->first()) {
+            return;
+        }
+
+        $this->model->{{snake_singular_name}} = ${{snake_singular_name}};
+    }
+
+    /**
+     * Mutator for "{{snake_singular_name}}_code" attribute.
+     *
+     * @return string
+     */
+    public function get{{studly_name}}CodeAttribute()
+    {
+        return $this->model->{{snake_singular_name}} ? $this->model->{{snake_singular_name}}->code : NULL;
+    }
+
+    /**
+     * Ensure an integer value is set, otherwise nullable.
+     */
+    public function set{{studly_name}}IdAttribute($value)
+    {
+        $this->model->attributes['{{snake_singular_name}}_id'] = $value ?: NULL;
+    }
+}

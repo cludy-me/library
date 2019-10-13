@@ -5,7 +5,12 @@
 fields:
     title:
         label: {{lower_author}}.{{lower_plugin}}::lang.fields.title
-        span: full
+        span: auto
+
+    code:
+        label: {{lower_author}}.{{lower_plugin}}::lang.fields.code
+        span: auto
+        preset: title
 
     description:
         label: {{lower_author}}.{{lower_plugin}}::lang.fields.description
@@ -20,10 +25,14 @@ tabs:
 secondaryTabs:
     fields:
         is_enabled:
-            span: full
             type: switch
+            span: auto
             default: true
-                
+
+        is_primary:
+            type: switch
+            span: auto
+
         image:
             label: {{lower_author}}.{{lower_plugin}}::lang.fields.image
             type: fileupload

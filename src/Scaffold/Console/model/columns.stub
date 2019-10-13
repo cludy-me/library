@@ -14,6 +14,10 @@ columns:
         label: {{lower_author}}.{{lower_plugin}}::lang.fields.title
         searchable: true
 
+    code:
+        label: {{lower_author}}.{{lower_plugin}}::lang.fields.code
+        searchable: true
+
     has_comment:
         label: {{lower_author}}.{{lower_plugin}}::lang.fields.has_comment
         type: switch
@@ -22,6 +26,10 @@ columns:
         
     is_enabled:
         label: {{lower_author}}.{{lower_plugin}}::lang.fields.is_enabled
+        type: switch
+
+    is_primary:
+        label: {{lower_author}}.{{lower_plugin}}::lang.fields.is_default
         type: switch
 
     created_at:
