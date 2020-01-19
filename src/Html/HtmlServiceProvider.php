@@ -18,6 +18,8 @@ class HtmlServiceProvider extends ServiceProvider
     {
         $this->registerHtmlBuilder();
 
+        $this->registerHtmlFormatter();
+
         $this->registerFormBuilder();
 
         $this->registerBlockBuilder();
@@ -33,6 +35,19 @@ class HtmlServiceProvider extends ServiceProvider
             return new HtmlBuilder($app['url']);
         });
     }
+
+    /**
+     * Register the HTML formatter instance.
+     * @return void
+     */
+    protected function registerHtmlFormatter()
+    {
+        $this->app->singleton('html.formatter', function($app) {
+            return new HtmlFormatter;
+        });
+    }
+
+    
 
     /**
      * Register the form builder instance.
@@ -63,7 +78,7 @@ class HtmlServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['html', 'form', 'block'];
+        return ['html', 'html.formatter', 'form', 'block'];
     }
 
 }
